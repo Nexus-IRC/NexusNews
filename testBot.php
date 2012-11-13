@@ -88,6 +88,7 @@ function timer_evnts ($time, $call) {
 }
 
 function news () {
+	global $rss, $feeds;
 	$rss->rss_start();
 	$stat = $rss->getFeedInfo($feeds["4story.de"]['url'], "4story.de", $feeds["4story.de"]['output']);
 	$res = explode("\n",$rss->rss_end());
