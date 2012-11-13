@@ -53,7 +53,7 @@ while (true) { // Main LOOP
 			if ($exp[0] == "PING") {
 				$clients->putSocket($sockID,"PONG ".$exp[1]);
 			}
-			eval(file_get_contents("testBotCode.php"));
+			include("testBotCode.php");
 		}
 	}
 }

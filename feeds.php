@@ -30,9 +30,9 @@ $feeds['nostale2.de'] = array(
 
 $feeds['4story.de'] = array(
                 "url" =>                  "http://www.4story.de/news/rss",
-                "channels" =>             "#InfoBot #BuHuu.Gruft #StarZone #hero #creasor #TeaTime #Gabriel #Heat #SonicSyndicate",
+                "channels" =>             "#4story.de",
                 "database" =>             "InfoBot/scripts/db/4story.db",
-                "output"   =>             "[4Story.de] @@item!title@@ - @@item!link@@",
+                "output"   =>             "[4Story.de] @@item!title@@ - @@item!link@@ @@item!time@@",
 );
 
 $feeds['ogame.de'] = array(

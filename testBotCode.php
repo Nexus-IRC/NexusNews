@@ -1,3 +1,4 @@
+<?php
 $trigger = "!";
 $rsstrig = "!";
 if ($exp[1] == "001") {
@@ -10,14 +11,24 @@ if ($exp[1] == "PRIVMSG" && $exp[3][1] == "\001") {
  }
 }
 if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
-$msgt = "NOTICE";
-if ($exp[3][1] == "*") {
-	$msgt = "PRIVMSG";
-	$exp[3] = ":".substr($exp[3],2);
-}
-$nick = getNick($exp[0]);
+	if($exp[2] == "#4story.de"){
+		$rss->rss_start();
+		$stat = $rss->getFeedInfo($feeds["4story.de"]['url'], "4story.de", $feeds["4story.de"]['output']);
+		$res = explode("\n",$rss->rss_end());
+		$test = explode("~",$res[0]);
+		if($test[1] == time()){
+			$clients->putSocket($sockID,"PRIVMSG #4story.de :".$test[0]);
+		}
+	}
+	
+	$msgt = "NOTICE";
+	if ($exp[3][1] == "*") {
+		$msgt = "PRIVMSG";
+		$exp[3] = ":".substr($exp[3],2);
+	}
+	$nick = getNick($exp[0]);
 	if (@substr($exp[3],0,strlen(":".$rsstrig)) == ":$rsstrig") {
-	 $xfeed = substr($exp[3],strlen(":".$rsstrig));
+		$xfeed = substr($exp[3],strlen(":".$rsstrig));
 
 	 	if (isset($feeds[@$xfeed])) {
 			$rss->rss_start();
@@ -239,3 +250,4 @@ if (@$exp[001] == "INVITE") {
 	$clients->putSocket($sockID,"JOIN ".$exp[3]);
 	$clients->putSocket($sockID,"NOTICE $nick :Thanks for inviting me to ".$exp[3]."!");
 }
+?>

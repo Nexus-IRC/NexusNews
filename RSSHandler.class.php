@@ -25,6 +25,38 @@ class RSSHandler {
 	function rss_start () { // must be used BEFORE using getFeedInfo
 		ob_start();
 	}
+	
+	function rsstotime($rss_time) {
+		$day = substr($rss_time, 5, 2);
+		$month = substr($rss_time, 8, 3);
+		$month = date('m', strtotime("$month 1 2011"));
+		$year = substr($rss_time, 12, 4);
+		$hour = substr($rss_time, 17, 2);
+		$min = substr($rss_time, 20, 2);
+		$second = substr($rss_time, 23, 2);
+		$timezone = substr($rss_time, 26);
+
+		$timestamp = mktime($hour, $min, $second, $month, $day, $year);
+
+		date_default_timezone_set('UTC');
+
+		if(is_numeric($timezone)) {
+			$hours_mod = $mins_mod = 0;
+			$modifier = substr($timezone, 0, 1);
+			$hours_mod = (int) substr($timezone, 1, 2);
+			$mins_mod = (int) substr($timezone, 3, 2);
+			$hour_label = $hours_mod>1 ? 'hours' : 'hour';
+			$strtotimearg = $modifier.$hours_mod.' '.$hour_label;
+			if($mins_mod) {
+				$mins_label = $mins_mod>1 ? 'minutes' : 'minute';
+				$strtotimearg .= ' '.$mins_mod.' '.$mins_label;
+			}
+			$timestamp = strtotime($strtotimearg, $timestamp);
+		}
+
+		return $timestamp;
+	}
+	
 	function rss_end () {
 		$xyz = ob_get_contents(); // get output buffer contents
 		ob_end_clean(); // And clean the buffer.
@@ -54,18 +86,19 @@ class RSSHandler {
 		if (!$xml) // Why ever - reading that XML failed.
 			return(true); // Yes, this time its "true" for a fail because nothing=false and nothing is returned on success.
 		/* easyRSS format strings should be changed to our kind of format strings: */
-			$format = str_replace('@@default@@',     '[@@opts!name@@] @@item!title@@ - @@item!link@@', $format); // default easyRSS-style format string, contents only global-existing RSS feedinfos
-			$format = str_replace('@@feed!title@@',  '%5$s',                                           $format);
-			$format = str_replace('@@feed!link@@',   '%6$s',                                           $format); // }
-			$format = str_replace('@@feed!url@@',    '%6$s',                                           $format); // }
-			$format = str_replace('@@opts!name@@',   '%1$s',                                           $format);
-			$format = str_replace('@@opts!form@@',   '%7$s',                                           $format);
-			$format = str_replace('@@item!id@@',     '%4$s',                                           $format);
-			$format = str_replace('@@item!escid@@',  '%4$04d',                                         $format);
-			$format = str_replace('@@item!title@@',  '%2$s',                                           $format);
-			$format = str_replace('@@item!link@@',   '%3$s',                                           $format); // }
-			$format = str_replace('@@item!url@@',    '%3$s',                                           $format); // }
-			$format = str_replace('@@item!author@@', '%8$s',                                           $format);
+			$format = str_replace('@@default@@',		'[@@opts!name@@] @@item!title@@ - @@item!link@@', $format); // default easyRSS-style format string, contents only global-existing RSS feedinfos
+			$format = str_replace('@@feed!title@@',		'%5$s',                                           $format);
+			$format = str_replace('@@feed!link@@',		'%6$s',                                           $format); // }
+			$format = str_replace('@@feed!url@@',		'%6$s',                                           $format); // }
+			$format = str_replace('@@opts!name@@',		'%1$s',                                           $format);
+			$format = str_replace('@@opts!form@@',		'%7$s',                                           $format);
+			$format = str_replace('@@item!id@@',		'%4$s',                                           $format);
+			$format = str_replace('@@item!escid@@',		'%4$04d',                                         $format);
+			$format = str_replace('@@item!title@@',		'%2$s',                                           $format);
+			$format = str_replace('@@item!link@@',		'%3$s',                                           $format); // }
+			$format = str_replace('@@item!url@@',		'%3$s',                                           $format); // }
+			$format = str_replace('@@item!author@@',	'%8$s',                                           $format);
+			$format = str_replace('@@item!time@@',		'%9$s',                                           $format);
 		/* Done, all easyRSS format strings are replaed, continue working... */
 		if (isset($xml['channel']['item'][0])) { // Multiple items existing
 			foreach ($xml['channel']['item'] as $id => $idar) {
@@ -83,6 +116,7 @@ class RSSHandler {
 				$xmf[4] = $id;
 				$xmf[5] = $xml['channel']['title'];
 				$xmf[6] = $xml['channel']['link'];
+				$xmf[9] = '~'.$this->rsstotime($xml['channel']['item'][$id]['pubDate']);
 				$xmf[7] = $format;
 				ksort($xmf); // Because my way of sorting fails xD (Not 1-8 its 1-3,8,4-7 :X
 				// Now all format info is collected and we will return our RSS-result:
@@ -109,15 +143,4 @@ class RSSHandler {
 		}
 	}
 }
-
-/* TEST CODE - TO BE REMOVED BEFORE MAKING A NEW COMMIT !!! */
-$rss = new RSSHandler;
-$rss->rss_start();
-$rssurl = file_get_contents('rsslink.txt');
-$xrss = $rss->getFeedInfo($rssurl,'NosTale.de',null);
-if ($xrss == true) { // If the connection to the provided RSS-host wasnt successfull or the XML was
-                     // not valid.
- echo("FAILED: No such URL/HOST $rssurl or the XML wasn't valid.\n");
-}
-echo($rss->rss_end());
 ?>
