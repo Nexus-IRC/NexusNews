@@ -42,7 +42,8 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				} else {
 					foreach ($res as $ln => $lc) {
 						$nick = getNick($exp[0]);
-						$clients->putSocket($sockID,"$msgt $nick :".$lc);
+						$test1 = explode("~",$lc);
+						$clients->putSocket($sockID,"$msgt $nick :".$test1[0]);
 					}
 				}
 			}
