@@ -3,6 +3,7 @@ $trigger = "!";
 $rsstrig = "!";
 if ($exp[1] == "001") {
 	$clients->putSocket($sockID,"JOIN #Calisto,#InfoBot");
+	create_timer("1m","news");
 }
 if ($exp[1] == "PRIVMSG" && $exp[3][1] == "\001") {
  $nick = getNick($exp[0]);
@@ -11,16 +12,6 @@ if ($exp[1] == "PRIVMSG" && $exp[3][1] == "\001") {
  }
 }
 if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
-	if($exp[2] == "#4story.de"){
-		$rss->rss_start();
-		$stat = $rss->getFeedInfo($feeds["4story.de"]['url'], "4story.de", $feeds["4story.de"]['output']);
-		$res = explode("\n",$rss->rss_end());
-		$test = explode("~",$res[0]);
-		if($test[1] == time()){
-			$clients->putSocket($sockID,"PRIVMSG #4story.de :".$test[0]);
-		}
-	}
-	
 	$msgt = "NOTICE";
 	if ($exp[3][1] == "*") {
 		$msgt = "PRIVMSG";
