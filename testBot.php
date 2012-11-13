@@ -1,5 +1,5 @@
 <?php
-/* testBot.php - InfoBot
+/* testBot.php - NexusNews
  * Copyright (C) 2012  #Nexus project
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -20,9 +20,9 @@
  $host = "znc1.nexus-irc.de";
  $port = 2637;
  $pass = "xxxx:xxxx";
- $botnick = "InfoBot";
- $botident = "InfoBot";
- $botreal = "InfoBot Pre-Alpha 2.0 (IBnG)";
+ $botnick = "NexusNews";
+ $botident = "NexusNews";
+ $botreal = "NexusNews Pre-Alpha 2.0 (IBnG)";
  
 $dltimer = array();
 $timer = time();
@@ -88,7 +88,7 @@ function timer_evnts ($time, $call) {
 }
 
 function news () {
-	global $rss, $feeds;
+	global $rss, $feeds, $clients, $sockID;
 	$rss->rss_start();
 	$stat = $rss->getFeedInfo($feeds["4story.de"]['url'], "4story.de", $feeds["4story.de"]['output']);
 	$res = explode("\n",$rss->rss_end());

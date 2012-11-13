@@ -1,5 +1,5 @@
 <?php
-/* BotHandler.Class.php - InfoBot
+/* BotHandler.Class.php - NexusNews
  * Copyright (C) 2012  #Nexus project
  * 
  * This program is free software: you can redistribute it and/or modify

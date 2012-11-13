@@ -1,4 +1,20 @@
 <?php
+/* testBotCode.php - NexusNews
+ * Copyright (C) 2012  #Nexus project
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>. 
+ */
 $trigger = "!";
 $rsstrig = "!";
 if ($exp[1] == "001") {
@@ -8,7 +24,7 @@ if ($exp[1] == "001") {
 if ($exp[1] == "PRIVMSG" && $exp[3][1] == "\001") {
  $nick = getNick($exp[0]);
  if ($exp[3] == ":\001VERSION\001") {
-  $clients->putSocket($sockID,"NOTICE $nick :\001VERSION InfoBot Pre-Alpha 2.0 (IBnG) PHP ".phpversion()."\001");
+  $clients->putSocket($sockID,"NOTICE $nick :\001VERSION NexusNews Pre-Alpha 2.0 (IBnG) PHP ".phpversion()."\001");
  }
 }
 if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
@@ -223,16 +239,16 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 	if (@$exp[3] == ":".$trigger."feeds") {
 		$clients->putSocket($sockID,"$msgt $nick :There are \002".count($feeds)."\002 feeds in my database.");
 	}
-	if (@$exp[3] == ":".$trigger."infobot") {
-		$clients->putSocket($sockID,"$msgt $nick :\002InfoBot Pre-Alpha 2.0 (IBnG) PHP".phpversion());
+	if (@$exp[3] == ":".$trigger."nexusnews") {
+		$clients->putSocket($sockID,"$msgt $nick :\002NexusNews Pre-Alpha 2.0 (IBnG) PHP".phpversion());
 		$clients->putSocket($sockID,"$msgt $nick :Copyright © 2012 The irc-news.de project");
 		$clients->putSocket($sockID,"$msgt $nick :Hostet by #Nexus");
 		$clients->putSocket($sockID,"$msgt $nick : ");
 		$clients->putSocket($sockID,"$msgt $nick :All commands:");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."rss <nothing|feed-alias>       Shows you all available feeds or the content of any specific");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news                           Shows you a list of all feed categories");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."feeds                          Shows you, how many feeds the bot knows");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."infobot                        Shows this version info and help.");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."rss <nothing|feed-alias>         Shows you all available feeds or the content of any specific");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news                             Shows you a list of all feed categories");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."feeds                            Shows you, how many feeds the bot knows");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."nexusnews                        Shows this version info and help.");
 		$clients->putSocket($sockID,"$msgt $nick :".chr(31)."Little information: Putting a * in front of ".$trigger."<command> will force the bot to reply with a query.".chr(31));
 		$clients->putSocket($sockID,"$msgt $nick :-- End of listing --");
 	}

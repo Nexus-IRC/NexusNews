@@ -1,5 +1,5 @@
 <?php
-/* phpTextWrite.class.php - InfoBot
+/* phpTextWrite.class.php - NexusNews
  * Copyright (C) 2012  #Nexus project
  * 
  * This program is free software: you can redistribute it and/or modify
