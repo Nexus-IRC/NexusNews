@@ -239,17 +239,17 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 	if (@$exp[3] == ":".$trigger."feeds") {
 		$clients->putSocket($sockID,"$msgt $nick :There are \002".count($feeds)."\002 feeds in my database.");
 	}
-	if (@$exp[3] == ":".$trigger."nexusnews") {
-		$clients->putSocket($sockID,"$msgt $nick :\002NexusNews Pre-Alpha 2.0 (IBnG) PHP".phpversion());
-		$clients->putSocket($sockID,"$msgt $nick :Copyright © 2012 The irc-news.de project");
-		$clients->putSocket($sockID,"$msgt $nick :Hostet by #Nexus");
+	if (@$exp[3] == ":".$trigger."info") {
+		$clients->putSocket($sockID,"$msgt $nick :\002NexusNews Beta 1.0 (IBnG) PHP".phpversion());
+		$clients->putSocket($sockID,"$msgt $nick :Copyright © 2012 #Nexus project");
 		$clients->putSocket($sockID,"$msgt $nick : ");
 		$clients->putSocket($sockID,"$msgt $nick :All commands:");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."rss <nothing|feed-alias>         Shows you all available feeds or the content of any specific");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news                             Shows you a list of all feed categories");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."feeds                            Shows you, how many feeds the bot knows");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."nexusnews                        Shows this version info and help.");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."info                             Shows this version info and help.");
 		$clients->putSocket($sockID,"$msgt $nick :".chr(31)."Little information: Putting a * in front of ".$trigger."<command> will force the bot to reply with a query.".chr(31));
+		$clients->putSocket($sockID,"$msgt $nick :If you found a bug or if you have a good idea report it on http://bugtracker.nexus-irc.de/");
 		$clients->putSocket($sockID,"$msgt $nick :-- End of listing --");
 	}
 }
