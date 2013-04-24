@@ -1,6 +1,6 @@
 <?php
 /* testBot.php - NexusNews
- * Copyright (C) 2012  #Nexus project
+ * Copyright (C) 2012-2013  #Nexus project
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,13 @@
  */
 
 # Connection data:
- $host = "znc1.nexus-irc.de";
- $port = 2637;
- $pass = "xxxx:xxxx";
- $botnick = "NexusNews";
- $botident = "NexusNews";
- $botreal = "NexusNews Pre-Alpha 2.0 (IBnG)";
- 
+$host = "znc1.nexus-irc.de";
+$port = 2637;
+$pass = "xxxx:xxxx";
+$botnick = "NexusNews";
+$botident = "NexusNews";
+$botreal = "NexusNews Beta 2.0 (IBnG)";
+
 $dltimer = array();
 $timer = time();
 $stime = time();
@@ -31,7 +31,6 @@ $stime = time();
 require_once("RSSHandler.class.php");
 require_once("BotHandler.class.php");
 require_once("clientSocket.class.php");
-require_once("phpTextWrite.class.php");
 
 # Feed list, also a dependency
 require_once("feeds.php");
@@ -90,13 +89,14 @@ function timer_evnts ($time, $call) {
 function news () {
 	global $rss, $feeds, $clients, $sockID;
 	$rss->rss_start();
-	$stat = $rss->getFeedInfo($feeds["4story.de"]['url'], "4story.de", $feeds["4story.de"]['output']);
+	$stat = $rss->getFeedInfo($feeds["ogame.de"]['url'], "ogame.de", $feeds["ogame.de"]['output']);
 	$res = explode("\n",$rss->rss_end());
 	$test = explode("~",$res[0]);
 	if(date("d.m.Y",$test[1]) == date("d.m.Y",time())){
-		$clients->putSocket($sockID,"PRIVMSG #4story.de :".$test[0]);
+		$clients->putSocket($sockID,"PRIVMSG #nexus-test :".$test[0]);
 		create_timer("6h","news");
-	}else{
+	}
+	else{
 		create_timer("1h","news");
 	}
 }
@@ -185,25 +185,25 @@ function time2str ($line) {
 		$secs = $secs - 60;
 	}
 	if ($years > 0) {
-		$str = $str.$years."years ";
+		$str = $str.$years." years ";
 	}
 	if ($months > 0) {
-		$str = $str.$months."months ";
+		$str = $str.$months." months ";
 	}
 	if ($wks > 0) {
-		$str = $str.$wks."weeks ";
+		$str = $str.$wks." weeks ";
 	}
 	if ($days > 0) {
-		$str = $str.$days."days ";
+		$str = $str.$days." days ";
 	}
 	if ($hrs > 0) {
-		$str = $str.$hrs."hours ";
+		$str = $str.$hrs." hours ";
 	}
 	if ($mins > 0) {
-		$str = $str.$mins."minutes ";
+		$str = $str.$mins." minutes ";
 	}
 	if ($secs > 0 or $str == "") {
-		$str = $str.$secs."seconds";
+		$str = $str.$secs." seconds";
 	}
 	if (substr($str,strlen($str) - 1) == " ") {
 		$str = substr($str,0,strlen($str) - 1);

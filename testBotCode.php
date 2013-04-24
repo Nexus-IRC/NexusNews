@@ -1,6 +1,6 @@
 <?php
 /* testBotCode.php - NexusNews
- * Copyright (C) 2012  #Nexus project
+ * Copyright (C) 2012-2013  #Nexus project
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,18 @@
  */
 $trigger = "!";
 $rsstrig = "!";
+$debugchan = "#nexus-debug";
+$version = "Beta 2.0"
+
 if ($exp[1] == "001") {
-	$clients->putSocket($sockID,"JOIN #Calisto,#InfoBot");
+	$clients->putSocket($sockID,"MODE ".$botnick." +xiIn");
+	$clients->putSocket($sockID,"JOIN ".$debugchan.",#nexus-test");
 	create_timer("1m","news");
 }
 if ($exp[1] == "PRIVMSG" && $exp[3][1] == "\001") {
  $nick = getNick($exp[0]);
  if ($exp[3] == ":\001VERSION\001") {
-  $clients->putSocket($sockID,"NOTICE $nick :\001VERSION NexusNews Pre-Alpha 2.0 (IBnG) PHP ".phpversion()."\001");
+  $clients->putSocket($sockID,"NOTICE $nick :\001VERSION NexusNews ".$version." (IBnG) PHP ".phpversion()."\001");
  }
 }
 if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
@@ -56,14 +60,6 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 			}
 		}
 	}
-	if ($exp[3] == ":".$trigger."write") {
-		$phpText = new phpText(chr(22)." ".chr(22));
-		$cstr = str_replace("{heart}",chr(5),substr($gets,strlen("$exp[0] $exp[1] $exp[2] $exp[3] ")));
-		$xy = explode("\n",$phpText->convert($cstr));
-		foreach ($xy as $line) {
-			$clients->putSocket($sockID,"PRIVMSG $exp[2] :$line");
-		}
-	}
 	if ($exp[3] == ":".$trigger."rss") {
 		if (isset($feeds[@$exp[4]])) {
 			$rss->rss_start();
@@ -84,9 +80,9 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 		} else {
 			if (@$exp[4] != NULL) {
 				$clients->putSocket($sockID,"$msgt $nick :I don't know this feed.");
-				$clients->putSocket($sockID,"$msgt $nick :How to list feeds: Use !news");
+				$clients->putSocket($sockID,"$msgt $nick :How to list feeds: Use ".$trigger."news");
 			} else {
-				$clients->putSocket($sockID,"$msgt $nick :\002All available feeds\002");
+				$clients->putSocket($sockID,"$msgt $nick :\002All Available Feeds\002");
 				$xy = 0;
 				foreach ($feeds as $feedname => $feedopts) {
 					$xy++;
@@ -96,7 +92,7 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 						$clients->putSocket($sockID,"$msgt $nick :\002$feedname\002 (no feed url added yet)");
 					}
 				}
-				$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+				$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 			}
 		}
 	}
@@ -104,19 +100,19 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 		$nick = getNick($exp[0]);
 		$clients->putSocket($sockID,"$msgt $nick :\002Available Languages\002");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.com     Common");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.org     Organisation");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.org     Organization");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.de      German");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.uk      British");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.ir      Iranian");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.ir      Iranian/Persian");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.pl      Polish");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.ru      Russian");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.es      Spanish");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.fr      French");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.us      United States Feeds");
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- (10 results)");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.us      United States");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news.br      Brazil");
 	}
 	if (@$exp[3] == ":".$trigger."news.de") {
-		$clients->putSocket($sockID,"$msgt $nick :\002Available german feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available German Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.de',$feedname)) {
@@ -124,10 +120,10 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."news.uk") {
-		$clients->putSocket($sockID,"$msgt $nick :\002Available british feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available British Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.uk',$feedname)) {
@@ -135,10 +131,10 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."news.com") {
-		$clients->putSocket($sockID,"$msgt $nick :\002Available common feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available Common Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.com',$feedname)) {
@@ -146,10 +142,10 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."news.org") {
-		$clients->putSocket($sockID,"$msgt $nick :\002Available organisation feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available Organization Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.org',$feedname)) {
@@ -157,10 +153,10 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."news.it") {
-		$clients->putSocket($sockID,"$msgt $nick :\002Available italian feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available Italian Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.it',$feedname)) {
@@ -168,10 +164,10 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."news.ir") {
-		$clients->putSocket($sockID,"$msgt $nick :\002Available iranian/persian feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available Iranian/Persian Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.ir',$feedname)) {
@@ -179,10 +175,10 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."news.pl") {
-		$clients->putSocket($sockID,"$msgt $nick :\002Available polish feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available Polish Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.pl',$feedname)) {
@@ -190,10 +186,10 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."news.ru") {	
-		$clients->putSocket($sockID,"$msgt $nick :\002Available russian feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available Russian Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.ru',$feedname)) {
@@ -201,10 +197,10 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."news.es") {
-		$clients->putSocket($sockID,"$msgt $nick :\002Available spanish feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available Spanish Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.es',$feedname)) {
@@ -212,10 +208,10 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."news.fr") {
-		$clients->putSocket($sockID,"$msgt $nick :\002Available french feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available French Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.fr',$feedname)) {
@@ -223,10 +219,10 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."news.us") {
-		$clients->putSocket($sockID,"$msgt $nick :\002Available american feeds\002");
+		$clients->putSocket($sockID,"$msgt $nick :\002Available American Feeds\002");
 		$xy = 0;
 		foreach ($feeds as $feedname => $feedopts) {
 			if (fnmatch('*.us',$feedname)) {
@@ -234,28 +230,38 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 				$xy++;
 			}
 		}
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing -- ($xy results)");
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
+	}
+	if (@$exp[3] == ":".$trigger."news.br") {
+		$clients->putSocket($sockID,"$msgt $nick :\002Available Brazilian Feeds\002");
+		$xy = 0;
+		foreach ($feeds as $feedname => $feedopts) {
+			if (fnmatch('*.br',$feedname)) {
+				$clients->putSocket($sockID,"$msgt $nick :$feedname");
+				$xy++;
+			}
+		}
+		$clients->putSocket($sockID,"$msgt $nick :-- End of List -- ($xy results)");
 	}
 	if (@$exp[3] == ":".$trigger."feeds") {
 		$clients->putSocket($sockID,"$msgt $nick :There are \002".count($feeds)."\002 feeds in my database.");
 	}
 	if (@$exp[3] == ":".$trigger."info") {
-		$clients->putSocket($sockID,"$msgt $nick :\002NexusNews Beta 1.0 (IBnG) PHP".phpversion());
-		$clients->putSocket($sockID,"$msgt $nick :Copyright © 2012 #Nexus project");
-		$clients->putSocket($sockID,"$msgt $nick : ");
+		$clients->putSocket($sockID,"$msgt $nick :\002NexusNews ".$version." (IBnG) PHP".phpversion());
+		$clients->putSocket($sockID,"$msgt $nick :Copyright © 2012-2013 #Nexus Project");
 		$clients->putSocket($sockID,"$msgt $nick :All commands:");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."rss <nothing|feed-alias>         Shows you all available feeds or the content of any specific");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news                             Shows you a list of all feed categories");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."feeds                            Shows you, how many feeds the bot knows");
-		$clients->putSocket($sockID,"$msgt $nick :".$trigger."info                             Shows this version info and help.");
-		$clients->putSocket($sockID,"$msgt $nick :".chr(31)."Little information: Putting a * in front of ".$trigger."<command> will force the bot to reply with a query.".chr(31));
-		$clients->putSocket($sockID,"$msgt $nick :If you found a bug or if you have a good idea report it on http://bugtracker.nexus-irc.de/");
-		$clients->putSocket($sockID,"$msgt $nick :-- End of listing --");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."rss <nothing|feed-alias>   Shows you all available feeds or the content of any specific feed");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."news                       Shows you a list of all feed categories");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."feeds                      Shows you how many feeds the bot knows");
+		$clients->putSocket($sockID,"$msgt $nick :".$trigger."info                       Shows the version info and help");
+		$clients->putSocket($sockID,"$msgt $nick :".chr(31)."INFO: Putting a * in front of ".$trigger."<command> will force the bot to reply with a query.".chr(31));
+		$clients->putSocket($sockID,"$msgt $nick :If you have found a bug or if you have a good idea report it on http://bugtracker.nexus-irc.de");
 	}
 }
 
 if (@$exp[001] == "INVITE") {
 	$clients->putSocket($sockID,"JOIN ".$exp[3]);
+	$clients->putSocket($sockID,"PRIVMSG $debugchan :$nick invited me to ".$exp[3]);
 	$clients->putSocket($sockID,"NOTICE $nick :Thanks for inviting me to ".$exp[3]."!");
 }
 ?>
