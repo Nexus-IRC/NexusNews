@@ -16,14 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>. 
  */
 
-# Connection data:
-$host = "znc1.nexus-irc.de";
-$port = 2637;
-$pass = "xxxx:xxxx";
-$botnick = "NexusNews";
-$botident = "NexusNews";
-$botreal = "NexusNews Beta 2.0 (IBnG)";
-
+require_once("config.php");
 $dltimer = array();
 $timer = time();
 $stime = time();

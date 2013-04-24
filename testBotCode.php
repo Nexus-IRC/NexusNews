@@ -15,20 +15,18 @@
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>. 
  */
-$trigger = "!";
-$rsstrig = "!";
-$debugchan = "#nexus-debug";
-$version = "Beta 2.0"
+
+require_once("config.php");
 
 if ($exp[1] == "001") {
-	$clients->putSocket($sockID,"MODE ".$botnick." +xiIn");
-	$clients->putSocket($sockID,"JOIN ".$debugchan.",#nexus-test");
+	$clients->putSocket($sockID,"MODE $botnick +xiIn");
+	$clients->putSocket($sockID,"JOIN $debugchan,#nexus-test");
 	create_timer("1m","news");
 }
 if ($exp[1] == "PRIVMSG" && $exp[3][1] == "\001") {
  $nick = getNick($exp[0]);
- if ($exp[3] == ":\001VERSION\001") {
-  $clients->putSocket($sockID,"NOTICE $nick :\001VERSION NexusNews ".$version." (IBnG) PHP ".phpversion()."\001");
+if ($exp[3] == ":\001VERSION\001") {
+  $clients->putSocket($sockID,"NOTICE $nick :\001VERSION NexusNews $version (IBnG) PHP ".phpversion()."\001");
  }
 }
 if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
@@ -247,7 +245,7 @@ if ($exp[1] == "PRIVMSG" && $exp[2][0] == "#") {
 		$clients->putSocket($sockID,"$msgt $nick :There are \002".count($feeds)."\002 feeds in my database.");
 	}
 	if (@$exp[3] == ":".$trigger."info") {
-		$clients->putSocket($sockID,"$msgt $nick :\002NexusNews ".$version." (IBnG) PHP".phpversion());
+		$clients->putSocket($sockID,"$msgt $nick :\002NexusNews $version (IBnG) PHP".phpversion());
 		$clients->putSocket($sockID,"$msgt $nick :Copyright © 2012-2013 #Nexus Project");
 		$clients->putSocket($sockID,"$msgt $nick :All commands:");
 		$clients->putSocket($sockID,"$msgt $nick :".$trigger."rss <nothing|feed-alias>   Shows you all available feeds or the content of any specific feed");
